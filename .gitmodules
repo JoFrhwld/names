@@ -1,0 +1,3 @@
+[submodule "syllabify"]
+	path = syllabify
+	url = git@github.com:kylebgorman/syllabify.git
