@@ -51,7 +51,8 @@ ggplot(syl_top_3_full, aes(year, prop, color = syllable)) +
   facet_wrap(~sex) +
   geom_dl(aes(label = syllable), method = "last.qp")+
   geom_dl(aes(label = syllable), method = "first.qp")+
-  xlim(1870,2020)
+  xlim(1870,2020)+
+  theme_bw()
 
 
 #+ dev = "svg"
@@ -116,7 +117,7 @@ ggplot(rime_top_5_full, aes(year, rank, color = rhyme)) +
 
 #+ dev = "svg"
 ggplot(rime_top_5_full, aes(year, prop, color = rhyme)) + 
-  stat_smooth(span = 0.08) + 
+  stat_smooth(span = 0.08, se = F) + 
   facet_wrap(~sex) +
   geom_dl(aes(label = rhyme), method = "last.qp")+
   geom_dl(aes(label = rhyme), method = "first.qp")+
