@@ -7,8 +7,9 @@ import re
 from nltk.corpus import cmudict
 import string
 
-names_file = open("top_names_since_1950.csv", 'rb')
+names_file = open("data-baby-names/baby-names.csv", 'rb')
 names_list = csv.reader(names_file)
+header = names_list.next()
 
 the_dict = cmudict.dict()
 
@@ -18,10 +19,10 @@ coda_dict = {}
 onset_dict = {}
 
 
-def process_name(row, the_dict, sex, syllable_dict, rhyme_dict, coda_dict, onset_dict):
+def process_name(row, the_dict, syllable_dict, rhyme_dict, coda_dict, onset_dict):
 	year = row[0]
-	name_dict = {"M":row[2].lower(), "F":row[3].lower()}	
-	name = name_dict[sex]
+	name = row[1].lower()
+	sex = row[3]
 
 	trans = the_dict[name][0]
 	syls = syllabify(trans)
@@ -33,17 +34,24 @@ def process_name(row, the_dict, sex, syllable_dict, rhyme_dict, coda_dict, onset
 	mutable_syls[-1][-1] = mutable_syls[-1][-1] + ["#"]		
 
 	if year not in syllable_dict:
-		syllable_dict[year] = {"M":{}, "F":{}}
+		syllable_dict[year] = {}
+	if sex not in syllable_dict[year]:
+		syllable_dict[year][sex] = {}
 
 	if year not in rhyme_dict:
-		rhyme_dict[year] = {"M":{}, "F":{}}
+		rhyme_dict[year] = {}
+	if sex not in rhyme_dict[year]:
+		rhyme_dict[year][sex] = {}
 
 	if year not in coda_dict:
-		coda_dict[year] = {"M":{}, "F":{}}
+		coda_dict[year] = {}
+	if sex not in coda_dict[year]:
+		coda_dict[year][sex] = {}
 
 	if year not in onset_dict:
-		onset_dict[year] = {"M":{}, "F":{}}
-
+		onset_dict[year] = {}
+	if sex not in onset_dict[year]:
+		onset_dict[year][sex] = {}
 
 	for syl in mutable_syls:
 		syl[1] = [x.replace("AH0", "@") for x in syl[1]]
@@ -78,17 +86,12 @@ def process_name(row, the_dict, sex, syllable_dict, rhyme_dict, coda_dict, onset
 	return (syllable_dict, rhyme_dict, coda_dict, onset_dict)
 
 for row in names_list:
-	boy = row[2].lower()
-	if boy in the_dict:
+	name = row[1].lower()
+	if name in the_dict:
 		syllable_dict, rhyme_dict, coda_dict,\
-		onset_dict = process_name(row, the_dict, "M",\
+		onset_dict = process_name(row, the_dict,\
 								  syllable_dict, rhyme_dict, coda_dict, onset_dict)
 
-	girl = row[3].lower()
-	if girl in the_dict:
-		syllable_dict, rhyme_dict, coda_dict,\
-		onset_dict = process_name(row, the_dict, "F",\
-								  syllable_dict, rhyme_dict, coda_dict, onset_dict)
 
 
 def dict_writer(out_dict, output):

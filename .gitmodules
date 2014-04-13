@@ -1,3 +1,6 @@
 [submodule "syllabify"]
 	path = syllabify
 	url = git@github.com:kylebgorman/syllabify.git
+[submodule "data-baby-names"]
+	path = data-baby-names
+	url = git@github.com:hadley/data-baby-names.git
